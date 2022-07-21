@@ -1,4 +1,4 @@
-package com.daifuku-bank.app;
+package com.daifukubank.app;
 
 /**
  * Hello world!
