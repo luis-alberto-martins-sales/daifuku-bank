@@ -1,1 +1,8 @@
+main/java/com/daifuku/models/OperacaoFinanceira.class
+main/java/com/daifuku/models/Usuario.class
+main/java/com/daifuku/enums/TipoConta.class
+main/java/com/daifuku/enums/TipoUsuario.class
+main/java/com/daifuku/models/Conta.class
+main/java/com/daifuku/exceptions/ExcecaoNegocial.class
+main/java/com/daifuku/Database/Database.class
 com/daifuku/app/App.class
