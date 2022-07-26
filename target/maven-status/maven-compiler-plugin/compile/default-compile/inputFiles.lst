@@ -1,1 +1,15 @@
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/usuario/UsuarioDAO.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/conta/ContaService.java
 /mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/app/App.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/database/Database.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/operacaoFinanceira/operacaoFinanceiraService.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/operacaoFinanceira/OperacaoFinanceiraModel.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/usuario/UsuarioModel.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/enums/TipoConta.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/exceptions/ExcecaoNegocial.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/operacaoFinanceira/OperacaoFinanceiraDAO.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/conta/ContaDAO.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/enums/TipoUsuario.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/usuario/UsuarioService.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/conta/ContaModel.java
+/mnt/c/Users/F6360787/daifuku-bank/src/main/java/com/daifuku/usuario/PessoaFisica.java

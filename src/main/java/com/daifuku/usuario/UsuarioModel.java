@@ -1,18 +1,19 @@
 package com.daifuku.usuario;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
 import com.daifuku.conta.ContaModel;
 import com.daifuku.enums.TipoUsuario;
 
-public abstract class UsuarioModel {
+public abstract class UsuarioModel implements Serializable {
 
     Integer chave;
     String nome;
     String email;
     TipoUsuario tipoUsuario;
-    Set<ContaModel> contas;
+    Set<Integer> chavesContas;
 
     public UsuarioModel (String nome, String email){
        
@@ -22,5 +23,17 @@ public abstract class UsuarioModel {
 
     public String getNome(){
         return this.nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setChave(Integer chave) {
+        this.chave = chave;
+    }
+
+    public Integer getChave() {
+        return chave;
     }
 }

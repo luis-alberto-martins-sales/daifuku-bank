@@ -8,4 +8,8 @@ public class PessoaFisica extends UsuarioModel {
         super.tipoUsuario=tipoUsuario.FISICA;
         this.cpf=cpf;
     }
+
+    public String getCpf() {
+        return cpf;
+    }
 }
