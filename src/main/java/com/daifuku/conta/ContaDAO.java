@@ -1,4 +1,4 @@
-package main.java.com.daifuku.conta;
+package com.daifuku.conta;
 
 public class ContaDAO {
     

@@ -1,10 +1,11 @@
-package main.java.com.daifuku.models;
+package com.daifuku.conta;
 
 import java.util.List;
 
-import main.java.com.daifuku.enums.TipoConta;
+import com.daifuku.enums.TipoConta;
+import com.daifuku.operacaoFinanceira.OperacaoFinanceiraModel;
 
 public abstract class ContaModel {
     TipoConta tipoConta;
-    List<OperacaoFinanceira> operacoesFinanceiras;
+    List<OperacaoFinanceiraModel> operacoesFinanceiras;
 }

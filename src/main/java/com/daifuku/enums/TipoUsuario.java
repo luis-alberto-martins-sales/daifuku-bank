@@ -1,4 +1,4 @@
-package main.java.com.daifuku.enums;
+package com.daifuku.enums;
 
 public enum TipoUsuario {
     FISICA,JURIDICA;

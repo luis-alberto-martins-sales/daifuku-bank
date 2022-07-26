@@ -1,8 +1,8 @@
-package main.java.com.daifuku.exceptions;
+package com.daifuku.exceptions;
 
 public class ExcecaoNegocial extends Exception{
 
-    ExcecaoNegocial(String mensagem){
+    public ExcecaoNegocial(String mensagem){
         super(mensagem);
     }
 }

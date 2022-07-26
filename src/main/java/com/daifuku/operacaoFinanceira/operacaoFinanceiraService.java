@@ -1,4 +1,4 @@
-package main.java.com.daifuku.operacaoFinanceira;
+package com.daifuku.operacaoFinanceira;
 
 public class operacaoFinanceiraService {
     
