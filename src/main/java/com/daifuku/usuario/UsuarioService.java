@@ -15,15 +15,13 @@ public class UsuarioService {
     }
 
 
-    public UsuarioModel cadastrarUsuario(UsuarioModel usuarioModel) throws ExcecaoNegocial {
+    public Integer cadastrarUsuario(UsuarioModel usuarioModel) throws ExcecaoNegocial {
         verificarDadoVazio(usuarioModel);
         validarDadosUsuario(usuarioModel);
         try {
             usuarioDAO.encontrarUsuarioPorEmail(usuarioModel.getEmail());
         } catch (NoSuchElementException e) {
             return usuarioDAO.criar(usuarioModel);
-        } catch (Exception e) {
-            throw e;
         }
 
         throw new ExcecaoNegocial("Usuário já cadastrado.");

@@ -1,6 +1,6 @@
 package com.daifuku.usuario;
 
-import com.daifuku.database.Database;
+import com.daifuku.database.DatabaseUsuarios;
 import com.daifuku.interfaces.CRUDInterface;
 
 import java.util.Set;
@@ -8,30 +8,30 @@ import java.util.Set;
 
 public class UsuarioDAO implements CRUDInterface<UsuarioModel> {
     @Override
-    public UsuarioModel criar(UsuarioModel usuarioModel){
-        return Database.INSTANCIA.adicionarUsuario(usuarioModel);
+    public Integer criar(UsuarioModel usuarioModel){
+        return DatabaseUsuarios.INSTANCIA.adicionarUsuario(usuarioModel);
     }
 
     @Override
-    public UsuarioModel ler(int chave) {
+    public UsuarioModel ler(Integer chave) {
         return null;
     }
 
     @Override
-    public UsuarioModel atualizar( int chave,UsuarioModel valor) {
+    public UsuarioModel atualizar( Integer chave,UsuarioModel valor) {
         return null;
     }
 
     @Override
-    public UsuarioModel deletar(int chave) {
+    public UsuarioModel deletar(Integer chave) {
         return null;
     }
 
     public UsuarioModel encontrarUsuarioPorEmail(String email){
-        return Database.INSTANCIA.encontrarUsuarioPorEmail(email);
+        return DatabaseUsuarios.INSTANCIA.encontrarUsuarioPorEmail(email);
     }
 
     public Set<UsuarioModel> recuperarUsuarios (){
-        return Database.INSTANCIA.recuperarUsuarios ();
+        return DatabaseUsuarios.INSTANCIA.recuperarUsuarios ();
     }
 }

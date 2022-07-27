@@ -7,29 +7,22 @@ import com.daifuku.operacaoFinanceira.OperacaoFinanceiraModel;
 import com.daifuku.usuario.UsuarioModel;
 import org.apache.commons.lang.SerializationUtils;
 
-public enum Database {
+public enum DatabaseUsuarios {
     INSTANCIA;
-
     private final TreeMap<Integer, UsuarioModel> usuarios = new TreeMap<>();
-    
-    private Map<Integer, ContaModel> contas;
 
-    private Map<Integer, OperacaoFinanceiraModel> operacoesFinanceiras;
-
-    public UsuarioModel adicionarUsuario (UsuarioModel usuarioModel){
+    public Integer adicionarUsuario (UsuarioModel usuarioModel){
 
         usuarioModel = (UsuarioModel) SerializationUtils.clone(usuarioModel);
         Integer ultimaChave;
         try {
             ultimaChave=usuarios.lastKey();
         } catch (NoSuchElementException e) {
-            usuarioModel.setChave(0);
             usuarios.put(0,usuarioModel);
-            return usuarioModel;
+            return 0;
         }
-        usuarioModel.setChave(ultimaChave+1);
         usuarios.put(ultimaChave+1,usuarioModel);
-        return usuarioModel;
+        return ultimaChave+1;
     }
 
     public UsuarioModel encontrarUsuarioPorEmail(String email){

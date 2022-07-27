@@ -9,7 +9,6 @@ import com.daifuku.enums.TipoUsuario;
 
 public abstract class UsuarioModel implements Serializable {
 
-    Integer chave;
     String nome;
     String email;
     TipoUsuario tipoUsuario;
@@ -29,11 +28,5 @@ public abstract class UsuarioModel implements Serializable {
         return email;
     }
 
-    public void setChave(Integer chave) {
-        this.chave = chave;
-    }
 
-    public Integer getChave() {
-        return chave;
-    }
 }
