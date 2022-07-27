@@ -4,6 +4,8 @@ import com.daifuku.abstractClasses.Service;
 import com.daifuku.enums.TipoConta;
 import com.daifuku.enums.TipoUsuario;
 import com.daifuku.exceptions.ExcecaoNegocial;
+import com.daifuku.operacaoFinanceira.OperacaoFinanceiraDAO;
+import com.daifuku.operacaoFinanceira.OperacaoFinanceiraModel;
 import com.daifuku.usuario.UsuarioDAO;
 import com.daifuku.usuario.UsuarioModel;
 
@@ -13,7 +15,7 @@ public class ContaService extends Service<ContaModel> {
 
     UsuarioDAO usuarioDAO;
 
-    public ContaService(ContaDAO contaDAO,UsuarioDAO usuarioDAO) {
+    public ContaService(ContaDAO contaDAO, UsuarioDAO usuarioDAO) {
         super(contaDAO);
         this.usuarioDAO=usuarioDAO;
     }
@@ -42,4 +44,5 @@ public class ContaService extends Service<ContaModel> {
             throw new IllegalArgumentException();
         }
     }
+
 }

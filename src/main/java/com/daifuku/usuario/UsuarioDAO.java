@@ -1,6 +1,6 @@
 package com.daifuku.usuario;
 
-import com.daifuku.database.DatabaseUsuarios;
+import com.daifuku.databases.DatabaseUsuarios;
 import com.daifuku.interfaces.DAOInterface;
 
 import java.util.Set;

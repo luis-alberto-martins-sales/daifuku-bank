@@ -1,4 +1,4 @@
-package com.daifuku.database;
+package com.daifuku.databases;
 
 import com.daifuku.abstractClasses.Database;
 import com.daifuku.conta.ContaModel;

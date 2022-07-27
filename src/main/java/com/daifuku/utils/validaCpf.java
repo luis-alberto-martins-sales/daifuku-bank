@@ -4,6 +4,7 @@ import static java.lang.Integer.parseInt;
 
 public class validaCpf {
 
+    //http://www.receita.fazenda.gov.br/aplicacoes/atcta/cpf/funcoes.js
     public static boolean testaCPF(String strCPF) {
         if (!strCPF.matches("\\d{11}")){
             throw new IllegalArgumentException("Cpf inválido.");

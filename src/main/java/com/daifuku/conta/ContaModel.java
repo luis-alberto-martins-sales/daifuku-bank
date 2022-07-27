@@ -1,17 +1,16 @@
 package com.daifuku.conta;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.daifuku.enums.TipoConta;
 import com.daifuku.interfaces.ModelInterface;
-import com.daifuku.operacaoFinanceira.OperacaoFinanceiraModel;
 
 public class ContaModel implements ModelInterface {
-    Integer chaveUsuario;
-    TipoConta tipoConta;
-    List<OperacaoFinanceiraModel> operacoesFinanceiras;
-    BigDecimal saldo = BigDecimal.ZERO;
+    private Integer chaveUsuario;
+    private TipoConta tipoConta;
+    private List<Integer> chavesOperacoesFinanceiras = new ArrayList<>();
 
     public ContaModel(Integer chave, TipoConta tipoConta) {
         this.chaveUsuario=chave;
@@ -24,5 +23,13 @@ public class ContaModel implements ModelInterface {
 
     public TipoConta getTipoConta() {
         return tipoConta;
+    }
+
+    public void adicionarChaveOperacaoFinanceira (Integer chave){
+        this.chavesOperacoesFinanceiras.add(chave);
+    }
+
+    public List<Integer> getChavesOperacoesFinanceiras() {
+        return Collections.unmodifiableList(chavesOperacoesFinanceiras);
     }
 }

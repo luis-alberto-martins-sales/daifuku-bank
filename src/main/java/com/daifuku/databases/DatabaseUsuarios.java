@@ -1,4 +1,4 @@
-package com.daifuku.database;
+package com.daifuku.databases;
 
 import java.util.*;
 

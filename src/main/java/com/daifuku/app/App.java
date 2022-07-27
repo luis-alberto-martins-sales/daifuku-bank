@@ -1,12 +1,14 @@
 package com.daifuku.app;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import com.daifuku.conta.ContaDAO;
 import com.daifuku.conta.ContaModel;
 import com.daifuku.conta.ContaService;
 import com.daifuku.exceptions.ExcecaoNegocial;
+import com.daifuku.operacaoFinanceira.OperacaoFinanceiraDAO;
+import com.daifuku.operacaoFinanceira.OperacaoFinanceiraService;
 import com.daifuku.usuario.PessoaFisica;
 import com.daifuku.usuario.UsuarioDAO;
 import com.daifuku.usuario.UsuarioModel;
@@ -23,9 +25,11 @@ public class App
 
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         ContaDAO  contaDAO = new ContaDAO();
+        OperacaoFinanceiraDAO operacaoFinanceiraDAO = new OperacaoFinanceiraDAO();
 
         UsuarioService usuarioService = new UsuarioService(usuarioDAO);
         ContaService contaService = new ContaService(contaDAO, usuarioDAO);
+        OperacaoFinanceiraService operacaoFinanceiraService = new OperacaoFinanceiraService(operacaoFinanceiraDAO,contaDAO,usuarioDAO);
 
         UsuarioModel usuarioPF = new PessoaFisica("nome","email@email.com","45771089095");
         Integer chaveUsuario = usuarioService.cadastrarUsuario(usuarioPF);
@@ -33,6 +37,16 @@ public class App
         ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.CORRENTE);
 
         Integer chaveConta = contaService.cadastrar(contaCorrente);
+
+        operacaoFinanceiraService.depositar(new BigDecimal(7), chaveConta);
+
+        operacaoFinanceiraService.depositar(new BigDecimal(3), chaveConta);
+
+        operacaoFinanceiraService.sacar(new BigDecimal(2), chaveConta);
+
+        System.out.println(operacaoFinanceiraService.consultarSaldo(chaveConta));
+
+        operacaoFinanceiraService.consultarRendimentoFuturo(chaveConta,LocalDateTime.now().plusYears(1l));
 
     }
 }

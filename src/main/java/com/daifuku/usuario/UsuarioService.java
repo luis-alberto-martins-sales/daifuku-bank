@@ -2,12 +2,11 @@ package com.daifuku.usuario;
 
 
 import com.daifuku.abstractClasses.Service;
-import com.daifuku.conta.ContaModel;
 import com.daifuku.exceptions.ExcecaoNegocial;
+import com.daifuku.utils.validaCnpj;
 import com.daifuku.utils.validaCpf;
 
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 public class UsuarioService extends Service<UsuarioModel> {
 
@@ -44,6 +43,12 @@ public class UsuarioService extends Service<UsuarioModel> {
                 throw new IllegalArgumentException("Cpf inválido.");
             }
         }
+        if (usuarioModel instanceof PessoaJuridica){
+            PessoaJuridica usuario = (PessoaJuridica) usuarioModel;
+            if(!validaCnpj.testaCNPJ(usuario.getCnpj())){
+                throw new IllegalArgumentException("Cnpj inválido.");
+            }
+        }
 
     }
 
@@ -62,6 +67,12 @@ public class UsuarioService extends Service<UsuarioModel> {
         if (usuarioModel instanceof PessoaFisica){
             PessoaFisica usuario = (PessoaFisica) usuarioModel;
             if (usuario.getCpf()==null || usuario.getCpf().isEmpty()){
+                throw new IllegalArgumentException();
+            }
+        }
+        if (usuarioModel instanceof PessoaJuridica){
+            PessoaJuridica usuario = (PessoaJuridica) usuarioModel;
+            if (usuario.getCnpj()==null || usuario.getCnpj().isEmpty()){
                 throw new IllegalArgumentException();
             }
         }

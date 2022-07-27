@@ -34,7 +34,14 @@ public abstract class Database<T> {
     }
 
     public T encontrarValor (Integer chave){
-        return mapa.get(chave);
+        T valor = mapa.get(chave);
+        if (valor==null){
+            throw new NoSuchElementException();
+        }
+        return valor;
     }
 
+    public T atualizarValor (Integer chave, T valor){
+        return mapa.put(chave,valor);
+    }
 }
