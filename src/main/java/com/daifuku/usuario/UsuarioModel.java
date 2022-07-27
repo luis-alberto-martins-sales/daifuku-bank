@@ -6,8 +6,9 @@ import java.util.Set;
 
 import com.daifuku.conta.ContaModel;
 import com.daifuku.enums.TipoUsuario;
+import com.daifuku.interfaces.ModelInterface;
 
-public abstract class UsuarioModel implements Serializable {
+public abstract class UsuarioModel implements ModelInterface {
 
     String nome;
     String email;
@@ -28,5 +29,7 @@ public abstract class UsuarioModel implements Serializable {
         return email;
     }
 
-
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
+    }
 }

@@ -1,6 +1,8 @@
 package com.daifuku.interfaces;
 
-public interface CRUDInterface<T> {
+
+public interface DAOInterface<T> {
+
     Integer criar (T valor);
 
     T ler (Integer chave);

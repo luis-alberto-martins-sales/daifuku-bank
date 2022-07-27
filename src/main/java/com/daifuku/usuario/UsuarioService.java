@@ -1,23 +1,27 @@
 package com.daifuku.usuario;
 
 
+import com.daifuku.abstractClasses.Service;
+import com.daifuku.conta.ContaModel;
 import com.daifuku.exceptions.ExcecaoNegocial;
 import com.daifuku.utils.validaCpf;
 
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class UsuarioService {
+public class UsuarioService extends Service<UsuarioModel> {
+
     UsuarioDAO usuarioDAO;
 
     public UsuarioService(UsuarioDAO usuarioDAO){
+        super(usuarioDAO);
         this.usuarioDAO=usuarioDAO;
     }
 
 
     public Integer cadastrarUsuario(UsuarioModel usuarioModel) throws ExcecaoNegocial {
-        verificarDadoVazio(usuarioModel);
-        validarDadosUsuario(usuarioModel);
+        verificarValorVazio(usuarioModel);
+        validarValor(usuarioModel);
         try {
             usuarioDAO.encontrarUsuarioPorEmail(usuarioModel.getEmail());
         } catch (NoSuchElementException e) {
@@ -29,11 +33,8 @@ public class UsuarioService {
         
     }
 
-    public Set<UsuarioModel> recuperarUsuarios (){
-        return usuarioDAO.recuperarUsuarios();
-    }
 
-    private void validarDadosUsuario(UsuarioModel usuarioModel) {
+    protected void validarValor(UsuarioModel usuarioModel) {
         if (!usuarioModel.getEmail().matches(".+@.+\\..+")){
             throw new IllegalArgumentException("Email inválido.");
         }
@@ -46,7 +47,9 @@ public class UsuarioService {
 
     }
 
-    private void verificarDadoVazio(UsuarioModel usuarioModel) {
+
+    @Override
+    protected void verificarValorVazio(UsuarioModel usuarioModel) {
         if (usuarioModel==null){
             throw new IllegalArgumentException();
         }
