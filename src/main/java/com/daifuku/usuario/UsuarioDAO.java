@@ -1,37 +1,33 @@
 package com.daifuku.usuario;
 
 import com.daifuku.databases.DatabaseUsuarios;
-import com.daifuku.interfaces.DAOInterface;
+import com.daifuku.arquitetura.DAOInterface;
 
 import java.util.Set;
 
 
 public class UsuarioDAO implements DAOInterface<UsuarioModel> {
     @Override
-    public Integer criar(UsuarioModel usuarioModel){
-        return DatabaseUsuarios.getInstancia().adicionarValor(usuarioModel);
+    public Integer cadastrarValor(UsuarioModel usuarioModel){
+        return DatabaseUsuarios.getInstancia().cadastrarValor(usuarioModel);
     }
 
     @Override
-    public UsuarioModel ler(Integer chave) {
-        return DatabaseUsuarios.getInstancia().encontrarValor(chave);
+    public UsuarioModel recuperarValor(Integer chave) {
+        return DatabaseUsuarios.getInstancia().recuperarValor(chave);
     }
 
     @Override
-    public UsuarioModel atualizar( Integer chave,UsuarioModel valor) {
-        return null;
+    public UsuarioModel atualizarValor(Integer chave, UsuarioModel valor) {
+        return DatabaseUsuarios.getInstancia().atualizarValor(chave,valor);
     }
 
-    @Override
-    public UsuarioModel deletar(Integer chave) {
-        return null;
-    }
 
     public UsuarioModel encontrarUsuarioPorEmail(String email){
         return DatabaseUsuarios.getInstancia().encontrarUsuarioPorEmail(email);
     }
 
     public Set<UsuarioModel> recuperarUsuarios (){
-        return DatabaseUsuarios.getInstancia().recuperarValores ();
+        return DatabaseUsuarios.getInstancia().recuperarTodosValores();
     }
 }

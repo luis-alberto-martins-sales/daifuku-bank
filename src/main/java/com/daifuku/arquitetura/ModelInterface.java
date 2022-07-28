@@ -1,4 +1,4 @@
-package com.daifuku.interfaces;
+package com.daifuku.arquitetura;
 
 import java.io.Serializable;
 

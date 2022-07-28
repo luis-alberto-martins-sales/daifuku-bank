@@ -1,19 +1,22 @@
-package com.daifuku.abstractClasses;
+package com.daifuku.arquitetura;
 
 import com.daifuku.exceptions.ExcecaoNegocial;
-import com.daifuku.interfaces.DAOInterface;
 
 public abstract class Service<T> {
-    protected DAOInterface<T> DAO;
+    protected final DAOInterface<T> DAO;
 
     protected Service(DAOInterface<T> DAO){
         this.DAO = DAO;
     }
 
-    public Integer cadastrar(T valor) throws ExcecaoNegocial {
+    public Integer cadastrarValor(T valor) throws ExcecaoNegocial {
         verificarValorVazio(valor);
         validarValor(valor);
-        return  DAO.criar(valor);
+        return DAO.cadastrarValor(valor);
+    }
+
+    public T recuperarValor(Integer chave){
+        return DAO.recuperarValor(chave);
     }
 
     protected abstract void validarValor(T valor) throws ExcecaoNegocial;

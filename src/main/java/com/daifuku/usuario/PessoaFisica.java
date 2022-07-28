@@ -4,7 +4,7 @@ import com.daifuku.enums.TipoUsuario;
 
 public class PessoaFisica extends UsuarioModel {
 
-    private String cpf;
+    private final String cpf;
     public PessoaFisica(String nome, String email,String cpf) {
         super(nome,email, TipoUsuario.FISICA);
         this.cpf=cpf;

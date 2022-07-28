@@ -1,19 +1,18 @@
-package com.daifuku.abstractClasses;
+package com.daifuku.databases;
 
-import com.daifuku.usuario.UsuarioModel;
 import org.apache.commons.lang.SerializationUtils;
 
 import java.io.Serializable;
 import java.util.*;
 
 public abstract class Database<T> {
-    protected final TreeMap<Integer,T> mapa = new TreeMap<>();
+     final TreeMap<Integer,T> mapa = new TreeMap<>();
 
-    public Integer adicionarValor (T valor){
+    public Integer cadastrarValor(T valor){
         if (!(valor instanceof Serializable)){
             throw new ClassCastException();
         }
-        valor = (T) SerializationUtils.clone((Serializable) valor);
+        valor = clonarValor(valor);
         Integer ultimaChave;
         try {
             ultimaChave= mapa.lastKey();
@@ -25,7 +24,7 @@ public abstract class Database<T> {
         return ultimaChave+1;
     }
 
-    public Set<T> recuperarValores() {
+    public Set<T> recuperarTodosValores() {
         Set<T> conjuntoValores = new HashSet<>();
         for (Integer chave:mapa.keySet()) {
             conjuntoValores.add(mapa.get(chave));
@@ -33,15 +32,18 @@ public abstract class Database<T> {
         return Collections.unmodifiableSet(conjuntoValores) ;
     }
 
-    public T encontrarValor (Integer chave){
-        T valor = mapa.get(chave);
-        if (valor==null){
-            throw new NoSuchElementException();
-        }
-        return valor;
+    public T recuperarValor(Integer chave){
+        return clonarValor(mapa.get(chave));
     }
 
-    public T atualizarValor (Integer chave, T valor){
-        return mapa.put(chave,valor);
+    public T atualizarValor (Integer chave, T novoValor){
+        return clonarValor(mapa.put(chave,novoValor));
+    }
+
+    protected T clonarValor(T valor){
+        if (valor==null){
+            throw new NoSuchElementException("Valor inválido.");
+        }
+        return (T) SerializationUtils.clone((Serializable) valor);
     }
 }

@@ -1,15 +1,15 @@
 package com.daifuku.operacaoFinanceira;
 
-import com.daifuku.interfaces.ModelInterface;
+import com.daifuku.arquitetura.ModelInterface;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class OperacaoFinanceiraModel implements ModelInterface {
-    private BigDecimal montante;
-    private LocalDateTime data;
-    private Integer chaveContaOrigem;
-    private Integer chaveContaDestino;
+    private final BigDecimal montante;
+    private final LocalDateTime data;
+    private final Integer chaveContaOrigem;
+    private final Integer chaveContaDestino;
 
     OperacaoFinanceiraModel(BigDecimal montante, Integer chaveContaOrigem, Integer chaveContaDestino){
         this.montante=montante;

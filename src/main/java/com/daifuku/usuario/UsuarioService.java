@@ -1,30 +1,28 @@
 package com.daifuku.usuario;
 
 
-import com.daifuku.abstractClasses.Service;
+import com.daifuku.arquitetura.Service;
 import com.daifuku.exceptions.ExcecaoNegocial;
-import com.daifuku.utils.validaCnpj;
-import com.daifuku.utils.validaCpf;
+import com.daifuku.utils.CNPJ;
+import com.daifuku.utils.CPF;
 
 import java.util.NoSuchElementException;
 
 public class UsuarioService extends Service<UsuarioModel> {
 
-    UsuarioDAO usuarioDAO;
 
     public UsuarioService(UsuarioDAO usuarioDAO){
         super(usuarioDAO);
-        this.usuarioDAO=usuarioDAO;
     }
 
-
-    public Integer cadastrarUsuario(UsuarioModel usuarioModel) throws ExcecaoNegocial {
+    @Override
+    public Integer cadastrarValor(UsuarioModel usuarioModel) throws ExcecaoNegocial {
         verificarValorVazio(usuarioModel);
         validarValor(usuarioModel);
         try {
-            usuarioDAO.encontrarUsuarioPorEmail(usuarioModel.getEmail());
+            ((UsuarioDAO) super.DAO).encontrarUsuarioPorEmail(usuarioModel.getEmail());
         } catch (NoSuchElementException e) {
-            return usuarioDAO.criar(usuarioModel);
+            return super.DAO.cadastrarValor(usuarioModel);
         }
 
         throw new ExcecaoNegocial("Usuário já cadastrado.");
@@ -39,13 +37,13 @@ public class UsuarioService extends Service<UsuarioModel> {
         }
         if (usuarioModel instanceof PessoaFisica){
             PessoaFisica usuario = (PessoaFisica) usuarioModel;
-            if(!validaCpf.testaCPF(usuario.getCpf())){
+            if(!CPF.testarCPF(usuario.getCpf())){
                 throw new IllegalArgumentException("Cpf inválido.");
             }
         }
         if (usuarioModel instanceof PessoaJuridica){
             PessoaJuridica usuario = (PessoaJuridica) usuarioModel;
-            if(!validaCnpj.testaCNPJ(usuario.getCnpj())){
+            if(!CNPJ.testarCNPJ(usuario.getCnpj())){
                 throw new IllegalArgumentException("Cnpj inválido.");
             }
         }

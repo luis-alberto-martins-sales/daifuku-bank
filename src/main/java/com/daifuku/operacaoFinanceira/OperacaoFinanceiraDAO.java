@@ -1,27 +1,23 @@
 package com.daifuku.operacaoFinanceira;
 
 import com.daifuku.databases.DatabaseOperacoesFinanceiras;
-import com.daifuku.interfaces.DAOInterface;
+import com.daifuku.arquitetura.DAOInterface;
 
 public class OperacaoFinanceiraDAO implements DAOInterface<OperacaoFinanceiraModel> {
 
     @Override
-    public Integer criar(OperacaoFinanceiraModel valor) {
-        return DatabaseOperacoesFinanceiras.getInstancia().adicionarValor(valor);
+    public Integer cadastrarValor(OperacaoFinanceiraModel valor) {
+        return DatabaseOperacoesFinanceiras.getInstancia().cadastrarValor(valor);
     }
 
     @Override
-    public OperacaoFinanceiraModel ler(Integer chave) {
-        return DatabaseOperacoesFinanceiras.getInstancia().encontrarValor(chave);
+    public OperacaoFinanceiraModel recuperarValor(Integer chave) {
+        return DatabaseOperacoesFinanceiras.getInstancia().recuperarValor(chave);
     }
 
     @Override
-    public OperacaoFinanceiraModel atualizar(Integer chave, OperacaoFinanceiraModel valor) {
-        return null;
+    public OperacaoFinanceiraModel atualizarValor(Integer chave, OperacaoFinanceiraModel valor) {
+        return DatabaseOperacoesFinanceiras.getInstancia().atualizarValor(chave, valor);
     }
 
-    @Override
-    public OperacaoFinanceiraModel deletar(Integer chave) {
-        return null;
-    }
 }

@@ -1,46 +1,50 @@
 package com.daifuku.conta;
 
 import com.daifuku.databases.DatabaseContas;
-import com.daifuku.interfaces.DAOInterface;
+import com.daifuku.databases.DatabaseOperacoesFinanceiras;
+import com.daifuku.arquitetura.DAOInterface;
 import com.daifuku.operacaoFinanceira.OperacaoFinanceiraModel;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public class ContaDAO implements DAOInterface<ContaModel> {
 
 
     @Override
-    public Integer criar(ContaModel valor) {
-        return DatabaseContas.getInstancia().adicionarValor(valor);
+    public Integer cadastrarValor(ContaModel valor) {
+        return DatabaseContas.getInstancia().cadastrarValor(valor);
     }
 
     @Override
-    public ContaModel ler(Integer chave) {
-        return DatabaseContas.getInstancia().encontrarValor(chave);
+    public ContaModel recuperarValor(Integer chave) {
+        return DatabaseContas.getInstancia().recuperarValor(chave);
     }
 
     @Override
-    public ContaModel atualizar(Integer chave, ContaModel valor) {
+    public ContaModel atualizarValor(Integer chave, ContaModel valor) {
         return DatabaseContas.getInstancia().atualizarValor(chave,valor);
     }
 
-    @Override
-    public ContaModel deletar(Integer chave) {
-        return null;
+    public void registrarOperacaoFinanceira(Integer chaveOperacaoFinanceira, Integer chaveConta) {
+        ContaModel contaModel = this.recuperarValor(chaveConta);
+        contaModel.adicionarChaveOperacaoFinanceira(chaveOperacaoFinanceira);
+        this.atualizarValor(chaveConta,contaModel);
     }
 
-    public void registrarOperacaoFinanceira(Integer chaveOperacaoFinanceira, OperacaoFinanceiraModel operacaoFinanceiraModel) {
-        Integer chaveContaOrigem = operacaoFinanceiraModel.getChaveContaOrigem();
-        if (chaveContaOrigem!=null){
-            ContaModel contaModelOrigem = this.ler(chaveContaOrigem);
-            contaModelOrigem.adicionarChaveOperacaoFinanceira(chaveOperacaoFinanceira);
-            this.atualizar(chaveContaOrigem,contaModelOrigem);
+    public BigDecimal consultarSaldo(Integer chaveConta) {
+        BigDecimal saldo = BigDecimal.ZERO;
+        List<Integer> chaves = recuperarValor(chaveConta).getChavesOperacoesFinanceiras();
+
+        for (Integer chave: chaves) {
+            OperacaoFinanceiraModel operacao = DatabaseOperacoesFinanceiras.getInstancia().recuperarValor(chave);
+            if (chaveConta.equals(operacao.getChaveContaOrigem()) ){
+                saldo=saldo.subtract(operacao.getMontante());
+                continue;
+            }
+            saldo=saldo.add(operacao.getMontante());
         }
 
-        Integer chaveContaDestino = operacaoFinanceiraModel.getChaveContaDestino();
-        if (chaveContaDestino!=null){
-            ContaModel contaModelDestino = this.ler(chaveContaDestino);
-            contaModelDestino.adicionarChaveOperacaoFinanceira(chaveOperacaoFinanceira);
-            this.atualizar(chaveContaDestino,contaModelDestino);
-        }
-
+        return saldo;
     }
 }

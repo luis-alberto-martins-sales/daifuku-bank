@@ -1,16 +1,17 @@
 package com.daifuku.usuario;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.daifuku.enums.TipoUsuario;
-import com.daifuku.interfaces.ModelInterface;
+import com.daifuku.arquitetura.ModelInterface;
 
 public abstract class UsuarioModel implements ModelInterface {
 
     private String nome;
     private String email;
     private TipoUsuario tipoUsuario;
-    private Set<Integer> chavesContas;
+    private final Set<Integer> chavesContas = new HashSet<>();
 
     public UsuarioModel (String nome, String email, TipoUsuario tipoUsuario){
        

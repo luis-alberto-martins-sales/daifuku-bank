@@ -1,6 +1,5 @@
 package com.daifuku.databases;
 
-import com.daifuku.abstractClasses.Database;
 import com.daifuku.conta.ContaModel;
 
 public class DatabaseContas extends Database<ContaModel> {

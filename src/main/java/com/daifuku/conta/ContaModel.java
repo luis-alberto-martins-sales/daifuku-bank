@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.daifuku.enums.TipoConta;
-import com.daifuku.interfaces.ModelInterface;
+import com.daifuku.arquitetura.ModelInterface;
 
 public class ContaModel implements ModelInterface {
-    private Integer chaveUsuario;
-    private TipoConta tipoConta;
-    private List<Integer> chavesOperacoesFinanceiras = new ArrayList<>();
+    private final Integer chaveUsuario;
+    private final TipoConta tipoConta;
+    private final List<Integer> chavesOperacoesFinanceiras = new ArrayList<>();
 
     public ContaModel(Integer chave, TipoConta tipoConta) {
         this.chaveUsuario=chave;
