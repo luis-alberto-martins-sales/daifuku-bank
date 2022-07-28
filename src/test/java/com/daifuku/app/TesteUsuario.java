@@ -1,9 +1,8 @@
 package com.daifuku.app;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.daifuku.exceptions.ExcecaoNegocial;
+import com.daifuku.enums.TipoUsuario;
 import com.daifuku.usuario.*;
 import com.daifuku.utils.CNPJ;
 import com.daifuku.utils.CPF;
@@ -18,9 +17,9 @@ public class TesteUsuario
 
 
     @Test
-    public void deveCadastrarUsuarioPFValido() throws ExcecaoNegocial {
+    public void deveCadastrarUsuarioPFValido()  {
 
-        UsuarioModel usuario = getUsuarioPFValido();
+        UsuarioModel usuario = getUsuarioValido(TipoUsuario.FISICA);
         Integer chave = usuarioService.cadastrarValor(usuario);
         UsuarioModel usuarioRecuperado = usuarioService.recuperarValor(chave);
         //TODO verificar todos os campos
@@ -28,8 +27,8 @@ public class TesteUsuario
     }
 
     @Test
-    public void deveCadastrarUsuarioPJValido() throws ExcecaoNegocial {
-        UsuarioModel usuario = getUsuarioPJValido();
+    public void deveCadastrarUsuarioPJValido()  {
+        UsuarioModel usuario = getUsuarioValido(TipoUsuario.JURIDICA);
         Integer chave =usuarioService.cadastrarValor(usuario);
         UsuarioModel usuarioRecuperado = usuarioService.recuperarValor(chave);
         //TODO verificar todos os campos
@@ -37,19 +36,15 @@ public class TesteUsuario
     }
 
     //TODO realizar testes de falha
-    private UsuarioModel getUsuarioPFValido(){
-        String nome = RandomStringUtils.randomAlphanumeric(10);
-        String email = RandomStringUtils.randomAlphanumeric(10)+"@"
-                +RandomStringUtils.randomAlphanumeric(10)+"."
-                +RandomStringUtils.randomAlphanumeric(10);
-        return new PessoaFisica(nome,email, CPF.gerarCPF());
-    }
-
-    private UsuarioModel getUsuarioPJValido(){
-        String nome = RandomStringUtils.randomAlphanumeric(10);
-        String email = RandomStringUtils.randomAlphanumeric(10)+"@"
-                +RandomStringUtils.randomAlphanumeric(10)+"."
-                +RandomStringUtils.randomAlphanumeric(10);
+    private UsuarioModel getUsuarioValido(TipoUsuario tipo){
+        String nome = RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME);
+        String email = RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME)+"@"
+                +RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME)+"."
+                +RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME);
+        if (tipo==TipoUsuario.FISICA){
+            return new PessoaFisica(nome,email, CPF.gerarCPF());
+        }
         return new PessoaJuridica(nome,email, CNPJ.gerarCNPJ());
     }
+
 }

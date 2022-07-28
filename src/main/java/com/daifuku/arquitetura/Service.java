@@ -11,6 +11,7 @@ public abstract class Service<T> {
 
     public Integer cadastrarValor(T valor) throws ExcecaoNegocial {
         verificarValorVazio(valor);
+        verificarCampoVazio(valor);
         validarValor(valor);
         return DAO.cadastrarValor(valor);
     }
@@ -22,6 +23,12 @@ public abstract class Service<T> {
     protected abstract void validarValor(T valor) throws ExcecaoNegocial;
 
     protected void verificarValorVazio(T valor) {
+        if (valor==null){
+            throw new IllegalArgumentException("Valor vazio.");
+        }
+    }
+
+    protected void verificarCampoVazio(T valor) {
         if (valor==null){
             throw new IllegalArgumentException("Valor vazio.");
         }

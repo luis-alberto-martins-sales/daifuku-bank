@@ -16,9 +16,11 @@ public class UsuarioService extends Service<UsuarioModel> {
     }
 
     @Override
-    public Integer cadastrarValor(UsuarioModel usuarioModel) throws ExcecaoNegocial {
+    public Integer cadastrarValor(UsuarioModel usuarioModel) {
         verificarValorVazio(usuarioModel);
+        verificarCampoVazio(usuarioModel);
         validarValor(usuarioModel);
+
         try {
             ((UsuarioDAO) super.DAO).encontrarUsuarioPorEmail(usuarioModel.getEmail());
         } catch (NoSuchElementException e) {
@@ -27,7 +29,6 @@ public class UsuarioService extends Service<UsuarioModel> {
 
         throw new ExcecaoNegocial("Usuário já cadastrado.");
 
-        
     }
 
 
@@ -51,27 +52,24 @@ public class UsuarioService extends Service<UsuarioModel> {
     }
 
 
-    @Override
-    protected void verificarValorVazio(UsuarioModel usuarioModel) {
-        if (usuarioModel==null){
-            throw new IllegalArgumentException();
-        }
+
+    protected void verificarCampoVazio(UsuarioModel usuarioModel) {
         if (usuarioModel.getNome()==null || usuarioModel.getNome().isEmpty()){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Nome não informado.");
         }
         if (usuarioModel.getEmail()==null || usuarioModel.getEmail().isEmpty()){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("E-mail não informado.");
         }
         if (usuarioModel instanceof PessoaFisica){
             PessoaFisica usuario = (PessoaFisica) usuarioModel;
             if (usuario.getCpf()==null || usuario.getCpf().isEmpty()){
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("CPF não informado.");
             }
         }
         if (usuarioModel instanceof PessoaJuridica){
             PessoaJuridica usuario = (PessoaJuridica) usuarioModel;
             if (usuario.getCnpj()==null || usuario.getCnpj().isEmpty()){
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("CNPJ não informado.");
             }
         }
     }

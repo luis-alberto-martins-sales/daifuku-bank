@@ -3,8 +3,6 @@ package com.daifuku.usuario;
 import com.daifuku.databases.DatabaseUsuarios;
 import com.daifuku.arquitetura.DAOInterface;
 
-import java.util.Set;
-
 
 public class UsuarioDAO implements DAOInterface<UsuarioModel> {
     @Override
@@ -22,12 +20,8 @@ public class UsuarioDAO implements DAOInterface<UsuarioModel> {
         return DatabaseUsuarios.getInstancia().atualizarValor(chave,valor);
     }
 
-
     public UsuarioModel encontrarUsuarioPorEmail(String email){
         return DatabaseUsuarios.getInstancia().encontrarUsuarioPorEmail(email);
     }
 
-    public Set<UsuarioModel> recuperarUsuarios (){
-        return DatabaseUsuarios.getInstancia().recuperarTodosValores();
-    }
 }
