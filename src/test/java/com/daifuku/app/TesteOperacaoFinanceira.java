@@ -1,5 +1,6 @@
 package com.daifuku.app;
 
+import com.daifuku.app.utils.TEST_CONSTANTS;
 import com.daifuku.conta.ContaDAO;
 import com.daifuku.conta.ContaModel;
 import com.daifuku.conta.ContaService;

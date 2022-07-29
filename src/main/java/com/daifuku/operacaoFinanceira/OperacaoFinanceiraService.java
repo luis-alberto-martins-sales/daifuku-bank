@@ -5,8 +5,9 @@ import com.daifuku.constants.TAXA;
 import com.daifuku.conta.ContaDAO;
 import com.daifuku.enums.TipoConta;
 import com.daifuku.enums.TipoUsuario;
-import com.daifuku.exceptions.ExcecaoNegocial;
+import com.daifuku.exceptions.NegotialException;
 import com.daifuku.usuario.UsuarioDAO;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -38,7 +39,7 @@ public class OperacaoFinanceiraService extends Service<OperacaoFinanceiraModel> 
 
     private void validarInvestimento(Integer chaveContaDestino) {
         if (contaDAO.recuperarValor(chaveContaDestino).getTipoConta()!= TipoConta.INVESTIMENTO){
-            throw new ExcecaoNegocial("Somente é possível realizar investimento em conta-investimento.");
+            throw new NegotialException("Somente é possível realizar investimento em conta-investimento.");
         }
     }
 
@@ -80,13 +81,13 @@ public class OperacaoFinanceiraService extends Service<OperacaoFinanceiraModel> 
 
     private void verificarSaldo(BigDecimal montante, Integer chaveConta) {
         if (montante.compareTo(contaDAO.consultarSaldo(chaveConta))==1){
-            throw new ExcecaoNegocial("Saldo insuficiente.");
+            throw new NegotialException("Saldo insuficiente.");
         }
     }
 
 
     @Override
-    protected void verificarCampoVazio(OperacaoFinanceiraModel valor){
+    protected void verificarCampoVazio(@NotNull OperacaoFinanceiraModel valor){
         if (valor.getMontante()==null){
             throw new IllegalArgumentException("Montante não informado.");
         }
@@ -98,10 +99,10 @@ public class OperacaoFinanceiraService extends Service<OperacaoFinanceiraModel> 
     @Override
     protected void validarValor(OperacaoFinanceiraModel valor) {
         if (valor.getMontante().signum()!=1) {
-            throw new ExcecaoNegocial("Montante deve ser número positivo.");
+            throw new NegotialException("Montante deve ser número positivo.");
         }
         if (valor.getMontante().scale()>2) {
-            throw new ExcecaoNegocial("Montante deve ser número com no máximo 2 casas decimais.");
+            throw new NegotialException("Montante deve ser número com no máximo 2 casas decimais.");
         }
         if (valor.getChaveContaOrigem()!=null) {
             contaDAO.recuperarValor(valor.getChaveContaOrigem());

@@ -3,7 +3,9 @@ package com.daifuku.conta;
 import com.daifuku.databases.DatabaseContas;
 import com.daifuku.databases.DatabaseOperacoesFinanceiras;
 import com.daifuku.arquitetura.DAOInterface;
+import com.daifuku.databases.DatabaseUsuarios;
 import com.daifuku.operacaoFinanceira.OperacaoFinanceiraModel;
+import com.daifuku.usuario.UsuarioModel;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -46,5 +48,9 @@ public class ContaDAO implements DAOInterface<ContaModel> {
         }
 
         return saldo;
+    }
+
+    UsuarioModel recuperarUsuarioDaConta(Integer chaveConta){
+        return DatabaseUsuarios.getInstancia().recuperarValor(this.recuperarValor(chaveConta).getChaveUsuario());
     }
 }

@@ -24,4 +24,12 @@ public class UsuarioDAO implements DAOInterface<UsuarioModel> {
         return DatabaseUsuarios.getInstancia().encontrarUsuarioPorEmail(email);
     }
 
+    public UsuarioModel encontrarUsuarioPorCpf(String cpf){
+        return DatabaseUsuarios.getInstancia().encontrarUsuarioPorCpf(cpf);
+    }
+
+    public UsuarioModel encontrarUsuarioPorCnpj(String cnpj){
+        return DatabaseUsuarios.getInstancia().encontrarUsuarioPorCnpj(cnpj);
+    }
+
 }

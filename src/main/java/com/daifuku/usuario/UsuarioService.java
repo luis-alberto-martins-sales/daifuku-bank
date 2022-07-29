@@ -2,9 +2,10 @@ package com.daifuku.usuario;
 
 
 import com.daifuku.arquitetura.Service;
-import com.daifuku.exceptions.ExcecaoNegocial;
+import com.daifuku.exceptions.UsuarioDuplicadoException;
 import com.daifuku.utils.CNPJ;
 import com.daifuku.utils.CPF;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.NoSuchElementException;
 
@@ -20,15 +21,41 @@ public class UsuarioService extends Service<UsuarioModel> {
         verificarValorVazio(usuarioModel);
         verificarCampoVazio(usuarioModel);
         validarValor(usuarioModel);
+        verificarUsuarioDuplicado(usuarioModel);
+        return super.DAO.cadastrarValor(usuarioModel);
+    }
 
+    private void verificarUsuarioDuplicado(UsuarioModel usuarioModel) {
+        verificarUsuarioEmailDuplicado(usuarioModel);
+        verificarUsuarioCpfCnpjDuplicado(usuarioModel);
+    }
+
+    private void verificarUsuarioCpfCnpjDuplicado(UsuarioModel usuarioModel) {
+        boolean usuarioDuplicado=true;
+        try {
+            if (usuarioModel instanceof PessoaFisica){
+                ((UsuarioDAO) super.DAO).encontrarUsuarioPorCpf(((PessoaFisica) usuarioModel).getCpf());
+            } else {
+                ((UsuarioDAO) super.DAO).encontrarUsuarioPorCnpj(((PessoaJuridica) usuarioModel).getCnpj());
+            }
+        } catch (NoSuchElementException e){
+            usuarioDuplicado=false;
+        }
+        if(usuarioDuplicado){
+            throw new UsuarioDuplicadoException();
+        }
+    }
+
+    private void verificarUsuarioEmailDuplicado(UsuarioModel usuarioModel) {
+        boolean usuarioDuplicado=true;
         try {
             ((UsuarioDAO) super.DAO).encontrarUsuarioPorEmail(usuarioModel.getEmail());
-        } catch (NoSuchElementException e) {
-            return super.DAO.cadastrarValor(usuarioModel);
+        } catch (NoSuchElementException e){
+            usuarioDuplicado=false;
         }
-
-        throw new ExcecaoNegocial("Usuário já cadastrado.");
-
+        if(usuarioDuplicado){
+            throw new UsuarioDuplicadoException();
+        }
     }
 
 
@@ -53,7 +80,7 @@ public class UsuarioService extends Service<UsuarioModel> {
 
 
 
-    protected void verificarCampoVazio(UsuarioModel usuarioModel) {
+    protected void verificarCampoVazio(@NotNull UsuarioModel usuarioModel) {
         if (usuarioModel.getNome()==null || usuarioModel.getNome().isEmpty()){
             throw new IllegalArgumentException("Nome não informado.");
         }

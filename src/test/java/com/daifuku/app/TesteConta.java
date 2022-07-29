@@ -1,17 +1,22 @@
 package com.daifuku.app;
 
+import com.daifuku.app.utils.TEST_CONSTANTS;
 import com.daifuku.conta.ContaDAO;
 import com.daifuku.conta.ContaModel;
 import com.daifuku.conta.ContaService;
 import com.daifuku.enums.TipoConta;
 import com.daifuku.enums.TipoUsuario;
+import com.daifuku.exceptions.NegotialException;
 import com.daifuku.usuario.*;
 import com.daifuku.utils.CNPJ;
 import com.daifuku.utils.CPF;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class TesteConta {
@@ -28,8 +33,8 @@ public class TesteConta {
         ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.CORRENTE);
         Integer chaveConta = contaService.cadastrarValor(contaCorrente);
         ContaModel contaRecuperada = contaService.recuperarValor(chaveConta);
-        //TODO verificar todos os campos
         assert(contaRecuperada.getTipoConta()==TipoConta.CORRENTE);
+        assert(contaRecuperada.getChaveUsuario().equals(chaveUsuario));
     }
 
     @Test
@@ -38,7 +43,8 @@ public class TesteConta {
         ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.POUPANCA);
         Integer chaveConta = contaService.cadastrarValor(contaCorrente);
         ContaModel contaRecuperada = contaService.recuperarValor(chaveConta);
-        //TODO verificar todos os campos
+
+        assert(contaRecuperada.getChaveUsuario().equals(chaveUsuario));
         assert(contaRecuperada.getTipoConta()==TipoConta.POUPANCA);
     }
 
@@ -48,7 +54,7 @@ public class TesteConta {
         ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.INVESTIMENTO);
         Integer chaveConta = contaService.cadastrarValor(contaCorrente);
         ContaModel contaRecuperada = contaService.recuperarValor(chaveConta);
-        //TODO verificar todos os campos
+        assert(contaRecuperada.getChaveUsuario().equals(chaveUsuario));
         assert(contaRecuperada.getTipoConta()==TipoConta.INVESTIMENTO);
     }
 
@@ -58,7 +64,7 @@ public class TesteConta {
         ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.CORRENTE);
         Integer chaveConta = contaService.cadastrarValor(contaCorrente);
         ContaModel contaRecuperada = contaService.recuperarValor(chaveConta);
-        //TODO verificar todos os campos
+        assert(contaRecuperada.getChaveUsuario().equals(chaveUsuario));
         assert(contaRecuperada.getTipoConta()==TipoConta.CORRENTE);
     }
 
@@ -68,11 +74,34 @@ public class TesteConta {
         ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.INVESTIMENTO);
         Integer chaveConta = contaService.cadastrarValor(contaCorrente);
         ContaModel contaRecuperada = contaService.recuperarValor(chaveConta);
-        //TODO verificar todos os campos
+        assert(contaRecuperada.getChaveUsuario().equals(chaveUsuario));
         assert(contaRecuperada.getTipoConta()==TipoConta.INVESTIMENTO);
     }
 
-    //TODO realizar testes de falha
+    @Test
+    public void naoDeveCadastrarContaPoupancaDePJ() {
+        Integer chaveUsuario = getChaveUsuarioValido(TipoUsuario.JURIDICA);
+        ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.POUPANCA);
+        assertThrows(NegotialException.class,()->contaService.cadastrarValor(contaCorrente)) ;
+    }
+
+    @Test
+    public void naoDeveCadastrarContaDeUsuarioInexistente() {
+
+        ContaModel contaCorrente = new ContaModel(-1, TipoConta.CORRENTE);
+        assertThrows(NoSuchElementException.class,()->contaService.cadastrarValor(contaCorrente)) ;
+    }
+
+    @Test
+    public void naoDeveRecuperarContaInexistente(){
+        assertThrows(NoSuchElementException.class,()->contaService.recuperarValor(-1));
+    }
+
+    @Test
+    public void naoDeveCadastrarContaCampoVazio(){
+        ContaModel contaModel = new ContaModel(null,null);
+        assertThrows(IllegalArgumentException.class,()->contaService.cadastrarValor(contaModel));
+    }
 
     private Integer getChaveUsuarioValido(TipoUsuario tipo) {
         String nome = RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME);

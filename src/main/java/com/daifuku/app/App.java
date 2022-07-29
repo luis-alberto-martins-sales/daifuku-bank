@@ -1,11 +1,12 @@
 package com.daifuku.app;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import com.daifuku.conta.ContaDAO;
 import com.daifuku.conta.ContaModel;
 import com.daifuku.conta.ContaService;
-import com.daifuku.exceptions.ExcecaoNegocial;
+import com.daifuku.exceptions.NegotialException;
 import com.daifuku.operacaoFinanceira.OperacaoFinanceiraDAO;
 import com.daifuku.operacaoFinanceira.OperacaoFinanceiraService;
 import com.daifuku.usuario.PessoaFisica;
@@ -16,7 +17,7 @@ import  com.daifuku.enums.TipoConta;
 
 public class App 
 {
-    public static void main( String[] args ) throws ExcecaoNegocial {
+    public static void main( String[] args ) throws NegotialException {
 
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         ContaDAO  contaDAO = new ContaDAO();
@@ -29,7 +30,7 @@ public class App
         UsuarioModel usuarioPF = new PessoaFisica("nome","email@email.com","45771089095");
         Integer chaveUsuario = usuarioService.cadastrarValor(usuarioPF);
 
-        ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.CORRENTE);
+        ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.POUPANCA);
 
         Integer chaveConta = contaService.cadastrarValor(contaCorrente);
 
@@ -39,9 +40,7 @@ public class App
 
         operacaoFinanceiraService.sacar(new BigDecimal(2), chaveConta);
 
-        System.out.println(contaService.consultarSaldo(chaveConta));
-
-        //contaService.consultarRendimentoFuturo(chaveConta, LocalDateTime.now().plusYears(1L));
+        System.out.println(contaService.consultarRendimentoFuturo(chaveConta, LocalDateTime.now().plusYears(1L).plusDays(1L)));
 
     }
 }
