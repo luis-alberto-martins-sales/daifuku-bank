@@ -35,7 +35,7 @@ public class ContaDAO implements DAOInterface<ContaModel> {
     }
 
     public BigDecimal consultarSaldo(Integer chaveConta) {
-        BigDecimal saldo = BigDecimal.ZERO;
+        BigDecimal saldo = BigDecimal.ZERO.setScale(2);
         List<Integer> chaves = recuperarValor(chaveConta).getChavesOperacoesFinanceiras();
 
         for (Integer chave: chaves) {
@@ -50,7 +50,7 @@ public class ContaDAO implements DAOInterface<ContaModel> {
         return saldo;
     }
 
-    UsuarioModel recuperarUsuarioDaConta(Integer chaveConta){
+    public UsuarioModel recuperarUsuarioDaConta(Integer chaveConta){
         return DatabaseUsuarios.getInstancia().recuperarValor(this.recuperarValor(chaveConta).getChaveUsuario());
     }
 }

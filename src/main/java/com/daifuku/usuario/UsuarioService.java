@@ -2,6 +2,7 @@ package com.daifuku.usuario;
 
 
 import com.daifuku.arquitetura.Service;
+import com.daifuku.exceptions.CampoVazioException;
 import com.daifuku.exceptions.UsuarioDuplicadoException;
 import com.daifuku.utils.CNPJ;
 import com.daifuku.utils.CPF;
@@ -17,26 +18,26 @@ public class UsuarioService extends Service<UsuarioModel> {
     }
 
     @Override
-    public Integer cadastrarValor(UsuarioModel usuarioModel) {
-        verificarValorVazio(usuarioModel);
-        verificarCampoVazio(usuarioModel);
-        validarValor(usuarioModel);
-        verificarUsuarioDuplicado(usuarioModel);
-        return super.DAO.cadastrarValor(usuarioModel);
+    public Integer cadastrarValor(UsuarioModel usuario) {
+        verificarValorVazio(usuario);
+        verificarCampoVazio(usuario);
+        validarValor(usuario);
+        verificarUsuarioDuplicado(usuario);
+        return super.DAO.cadastrarValor(usuario);
     }
 
-    private void verificarUsuarioDuplicado(UsuarioModel usuarioModel) {
-        verificarUsuarioEmailDuplicado(usuarioModel);
-        verificarUsuarioCpfCnpjDuplicado(usuarioModel);
+    private void verificarUsuarioDuplicado(UsuarioModel usuario) {
+        verificarUsuarioEmailDuplicado(usuario);
+        verificarUsuarioCpfCnpjDuplicado(usuario);
     }
 
-    private void verificarUsuarioCpfCnpjDuplicado(UsuarioModel usuarioModel) {
+    private void verificarUsuarioCpfCnpjDuplicado(UsuarioModel usuario) {
         boolean usuarioDuplicado=true;
         try {
-            if (usuarioModel instanceof PessoaFisica){
-                ((UsuarioDAO) super.DAO).encontrarUsuarioPorCpf(((PessoaFisica) usuarioModel).getCpf());
+            if (usuario instanceof PessoaFisica){
+                ((UsuarioDAO) super.DAO).encontrarUsuarioPorCpf(((PessoaFisica) usuario).getCpf());
             } else {
-                ((UsuarioDAO) super.DAO).encontrarUsuarioPorCnpj(((PessoaJuridica) usuarioModel).getCnpj());
+                ((UsuarioDAO) super.DAO).encontrarUsuarioPorCnpj(((PessoaJuridica) usuario).getCnpj());
             }
         } catch (NoSuchElementException e){
             usuarioDuplicado=false;
@@ -46,10 +47,10 @@ public class UsuarioService extends Service<UsuarioModel> {
         }
     }
 
-    private void verificarUsuarioEmailDuplicado(UsuarioModel usuarioModel) {
+    private void verificarUsuarioEmailDuplicado(UsuarioModel usuario) {
         boolean usuarioDuplicado=true;
         try {
-            ((UsuarioDAO) super.DAO).encontrarUsuarioPorEmail(usuarioModel.getEmail());
+            ((UsuarioDAO) super.DAO).encontrarUsuarioPorEmail(usuario.getEmail());
         } catch (NoSuchElementException e){
             usuarioDuplicado=false;
         }
@@ -59,44 +60,42 @@ public class UsuarioService extends Service<UsuarioModel> {
     }
 
 
-    protected void validarValor(UsuarioModel usuarioModel) {
-        if (!usuarioModel.getEmail().matches(".+@.+\\..+")){
+    protected void validarValor(UsuarioModel usuario) {
+        if (!usuario.getEmail().matches(".+@.+\\..+")){
             throw new IllegalArgumentException("Email inválido.");
         }
-        if (usuarioModel instanceof PessoaFisica){
-            PessoaFisica usuario = (PessoaFisica) usuarioModel;
-            if(!CPF.testarCPF(usuario.getCpf())){
+        if (usuario instanceof PessoaFisica){
+            PessoaFisica usuarioPF = (PessoaFisica) usuario;
+            if(!CPF.testarCPF(usuarioPF.getCpf())){
                 throw new IllegalArgumentException("Cpf inválido.");
             }
         }
-        if (usuarioModel instanceof PessoaJuridica){
-            PessoaJuridica usuario = (PessoaJuridica) usuarioModel;
-            if(!CNPJ.testarCNPJ(usuario.getCnpj())){
+        if (usuario instanceof PessoaJuridica){
+            PessoaJuridica usuarioPJ = (PessoaJuridica) usuario;
+            if(!CNPJ.testarCNPJ(usuarioPJ.getCnpj())){
                 throw new IllegalArgumentException("Cnpj inválido.");
             }
         }
 
     }
 
-
-
-    protected void verificarCampoVazio(@NotNull UsuarioModel usuarioModel) {
-        if (usuarioModel.getNome()==null || usuarioModel.getNome().isEmpty()){
-            throw new IllegalArgumentException("Nome não informado.");
+    protected void verificarCampoVazio(@NotNull UsuarioModel usuario) {
+        if (usuario.getNome()==null || usuario.getNome().isEmpty()){
+            throw new CampoVazioException("nome");
         }
-        if (usuarioModel.getEmail()==null || usuarioModel.getEmail().isEmpty()){
-            throw new IllegalArgumentException("E-mail não informado.");
+        if (usuario.getEmail()==null || usuario.getEmail().isEmpty()){
+            throw new CampoVazioException("e-mail");
         }
-        if (usuarioModel instanceof PessoaFisica){
-            PessoaFisica usuario = (PessoaFisica) usuarioModel;
-            if (usuario.getCpf()==null || usuario.getCpf().isEmpty()){
-                throw new IllegalArgumentException("CPF não informado.");
+        if (usuario instanceof PessoaFisica){
+            PessoaFisica usuarioPF = (PessoaFisica) usuario;
+            if (usuarioPF.getCpf()==null || usuarioPF.getCpf().isEmpty()){
+                throw new CampoVazioException("CPF");
             }
         }
-        if (usuarioModel instanceof PessoaJuridica){
-            PessoaJuridica usuario = (PessoaJuridica) usuarioModel;
-            if (usuario.getCnpj()==null || usuario.getCnpj().isEmpty()){
-                throw new IllegalArgumentException("CNPJ não informado.");
+        if (usuario instanceof PessoaJuridica){
+            PessoaJuridica usuarioPJ = (PessoaJuridica) usuario;
+            if (usuarioPJ.getCnpj()==null || usuarioPJ.getCnpj().isEmpty()){
+                throw new CampoVazioException("CNPJ");
             }
         }
     }

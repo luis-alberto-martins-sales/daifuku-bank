@@ -9,11 +9,10 @@ import com.daifuku.conta.ContaService;
 import com.daifuku.exceptions.NegotialException;
 import com.daifuku.operacaoFinanceira.OperacaoFinanceiraDAO;
 import com.daifuku.operacaoFinanceira.OperacaoFinanceiraService;
-import com.daifuku.usuario.PessoaFisica;
-import com.daifuku.usuario.UsuarioDAO;
-import com.daifuku.usuario.UsuarioModel;
-import com.daifuku.usuario.UsuarioService;
+import com.daifuku.usuario.*;
 import  com.daifuku.enums.TipoConta;
+import com.daifuku.utils.CNPJ;
+import com.daifuku.utils.CPF;
 
 public class App 
 {
@@ -27,20 +26,40 @@ public class App
         ContaService contaService = new ContaService(contaDAO, usuarioDAO);
         OperacaoFinanceiraService operacaoFinanceiraService = new OperacaoFinanceiraService(operacaoFinanceiraDAO,contaDAO,usuarioDAO);
 
-        UsuarioModel usuarioPF = new PessoaFisica("nome","email@email.com","45771089095");
-        Integer chaveUsuario = usuarioService.cadastrarValor(usuarioPF);
+        //Cadastrar Usuário pessoa física
+        UsuarioModel usuarioPF = new PessoaFisica("usuarioPF","usuarioPF@provedor.com", CPF.gerarCPF());
+        Integer chaveUsuarioPF = usuarioService.cadastrarValor(usuarioPF);
 
-        ContaModel contaCorrente = new ContaModel(chaveUsuario, TipoConta.POUPANCA);
+        //Cadastrar conta poupança
+        ContaModel contaPoupanca = new ContaModel(chaveUsuarioPF, TipoConta.POUPANCA);
+        Integer chaveContaPoupanca = contaService.cadastrarValor(contaPoupanca);
 
-        Integer chaveConta = contaService.cadastrarValor(contaCorrente);
+        //Depositar
+        operacaoFinanceiraService.depositar(new BigDecimal(7), chaveContaPoupanca);
 
-        operacaoFinanceiraService.depositar(new BigDecimal(7), chaveConta);
+        //Investir
+        operacaoFinanceiraService.depositar(new BigDecimal(3), chaveContaPoupanca);
 
-        operacaoFinanceiraService.depositar(new BigDecimal(3), chaveConta);
+        //Consultar saldo
+        contaService.consultarSaldo(chaveContaPoupanca);
 
-        operacaoFinanceiraService.sacar(new BigDecimal(2), chaveConta);
+        //Sacar
+        operacaoFinanceiraService.sacar(new BigDecimal(2), chaveContaPoupanca);
 
-        System.out.println(contaService.consultarRendimentoFuturo(chaveConta, LocalDateTime.now().plusYears(1L).plusDays(1L)));
+        //Criar usuário pessoa jurídica, criar conta-investimento, investir
+        UsuarioModel usuarioPJ = new PessoaJuridica("usuarioPJ","usuarioPJ@provedor.com", CNPJ.gerarCNPJ());
+        Integer chaveUsuarioPJ = usuarioService.cadastrarValor(usuarioPJ);
+        ContaModel contaInvestimento = new ContaModel(chaveUsuarioPJ, TipoConta.INVESTIMENTO);
+        Integer chaveContaInvestimento = contaService.cadastrarValor(contaInvestimento);
+        operacaoFinanceiraService.investir(new BigDecimal(6), chaveContaInvestimento);
 
+        //Tranferir de conta-investimento de pessoa jurídica para conta-poupança de pessoa física
+        operacaoFinanceiraService.transferir(new BigDecimal(4),chaveContaInvestimento,chaveContaPoupanca);
+
+        //Consultar rendimento de conta após um ano
+        contaService.consultarRendimentoFuturo(chaveContaInvestimento, LocalDateTime.now().plusYears(1L).plusDays(1L));
+
+        //Para mais casos de uso, ver classes de teste
+        //Cobertura de testes ~85% (jacoco)
     }
 }

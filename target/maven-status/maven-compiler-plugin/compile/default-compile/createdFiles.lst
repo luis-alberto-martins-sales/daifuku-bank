@@ -15,7 +15,9 @@ com\daifuku\arquitetura\ModelInterface.class
 com\daifuku\usuario\PessoaFisica.class
 com\daifuku\constants\RENDIMENTO_MENSAL.class
 com\daifuku\app\App.class
+com\daifuku\exceptions\CampoVazioException.class
 com\daifuku\operacaoFinanceira\OperacaoFinanceiraDAO.class
+com\daifuku\exceptions\SaldoInsuficienteException.class
 com\daifuku\usuario\UsuarioDAO.class
 com\daifuku\enums\TipoConta.class
 com\daifuku\utils\CPF.class

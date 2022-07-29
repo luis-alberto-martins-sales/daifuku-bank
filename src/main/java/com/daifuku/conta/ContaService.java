@@ -4,6 +4,7 @@ import com.daifuku.arquitetura.Service;
 import com.daifuku.constants.RENDIMENTO_MENSAL;
 import com.daifuku.enums.TipoConta;
 import com.daifuku.enums.TipoUsuario;
+import com.daifuku.exceptions.CampoVazioException;
 import com.daifuku.exceptions.NegotialException;
 import com.daifuku.arquitetura.DAOInterface;
 import com.daifuku.usuario.UsuarioModel;
@@ -24,23 +25,24 @@ public class ContaService extends Service<ContaModel> {
         this.usuarioDAO=usuarioDAO;
     }
 
-    protected void validarValor(ContaModel contaModel) {
+    @Override
+    protected void validarValor(ContaModel conta) {
         UsuarioModel usuario;
-        usuario= (UsuarioModel) this.usuarioDAO.recuperarValor(contaModel.getChaveUsuario());
+        usuario= (UsuarioModel) this.usuarioDAO.recuperarValor(conta.getChaveUsuario());
 
         if (usuario.getTipoUsuario()== TipoUsuario.JURIDICA
-                && contaModel.getTipoConta()== TipoConta.POUPANCA){
+                && conta.getTipoConta()== TipoConta.POUPANCA){
             throw new NegotialException("Pessoa jurídica não pode abrir conta poupança.");
         }
     }
 
     @Override
-    protected void verificarCampoVazio(@NotNull ContaModel contaModel) {
-        if (contaModel.getChaveUsuario()==null){
-            throw new IllegalArgumentException("Chave de usuário titular da conta não informado.");
+    protected void verificarCampoVazio(@NotNull ContaModel conta) {
+        if (conta.getChaveUsuario()==null){
+            throw new CampoVazioException("chave de usuário");
         }
-        if (contaModel.getTipoConta()==null){
-            throw new IllegalArgumentException("Tipo de conta não informado.");
+        if (conta.getTipoConta()==null){
+            throw new CampoVazioException("tipo de conta");
         }
     }
 
@@ -51,15 +53,18 @@ public class ContaService extends Service<ContaModel> {
 
     public BigDecimal consultarRendimentoFuturo(Integer chaveConta, LocalDateTime dataFutura) {
         validarConsultaRendimentoFuturo(chaveConta, dataFutura);
-        Integer totalMeses = (int) ChronoUnit.MONTHS.between(LocalDateTime.now(),dataFutura);
+        long totalMeses = ChronoUnit.MONTHS.between(LocalDateTime.now(),dataFutura);
         if ( ((ContaDAO) DAO).recuperarUsuarioDaConta(chaveConta).getTipoUsuario()==TipoUsuario.FISICA){
             return calcularRendimento(consultarSaldo(chaveConta),RENDIMENTO_MENSAL.PF,totalMeses);
         }
         return calcularRendimento(consultarSaldo(chaveConta),RENDIMENTO_MENSAL.PJ,totalMeses);
     }
 
-    private BigDecimal calcularRendimento (BigDecimal montante,BigDecimal taxa,Integer intervalo){
-        return montante.multiply(BigDecimal.ONE.add(taxa).pow(intervalo)).setScale(2,RoundingMode.HALF_DOWN);
+    private BigDecimal calcularRendimento (BigDecimal montante,BigDecimal taxa,long intervalo){
+        if (intervalo>999999999){
+            throw new UnsupportedOperationException("Intervalo não suportado.");
+        }
+        return montante.multiply(BigDecimal.ONE.add(taxa).pow((int) intervalo)).setScale(2,RoundingMode.HALF_DOWN);
     }
 
     private void validarConsultaRendimentoFuturo(Integer chaveConta, LocalDateTime dataFutura) {

@@ -1,16 +1,15 @@
 package com.daifuku.app;
 
+import static com.daifuku.app.testUtils.GeradorParaTeste.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.daifuku.app.utils.TEST_CONSTANTS;
 import com.daifuku.enums.TipoUsuario;
+import com.daifuku.exceptions.CampoVazioException;
 import com.daifuku.exceptions.NegotialException;
 import com.daifuku.exceptions.UsuarioDuplicadoException;
 import com.daifuku.usuario.*;
-import com.daifuku.utils.CNPJ;
 import com.daifuku.utils.CPF;
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
@@ -25,7 +24,7 @@ public class TesteUsuario
     @Test
     public void deveCadastrarUsuarioPFValido()  {
 
-        UsuarioModel usuario = getUsuarioValido(TipoUsuario.FISICA);
+        UsuarioModel usuario = gerarUsuarioValido(TipoUsuario.FISICA);
         Integer chave = usuarioService.cadastrarValor(usuario);
         UsuarioModel usuarioRecuperado = usuarioService.recuperarValor(chave);
 
@@ -36,7 +35,7 @@ public class TesteUsuario
 
     @Test
     public void deveCadastrarUsuarioPJValido()  {
-        UsuarioModel usuario = getUsuarioValido(TipoUsuario.JURIDICA);
+        UsuarioModel usuario = gerarUsuarioValido(TipoUsuario.JURIDICA);
         Integer chave =usuarioService.cadastrarValor(usuario);
         UsuarioModel usuarioRecuperado = usuarioService.recuperarValor(chave);
 
@@ -45,34 +44,41 @@ public class TesteUsuario
         assertEquals(((PessoaJuridica) usuario).getCnpj(),((PessoaJuridica) usuarioRecuperado).getCnpj());
     }
 
-    //TODO realizar testes de falha
     @Test
     public void naoDeveCadastrarUsuarioDuplicado()  {
-        UsuarioModel usuario = getUsuarioValido(TipoUsuario.FISICA);
+        UsuarioModel usuario = gerarUsuarioValido(TipoUsuario.FISICA);
         usuarioService.cadastrarValor(usuario);
-        assertThrows(NegotialException.class,
-                () -> usuarioService.cadastrarValor(usuario));
+
+        assertThrows(NegotialException.class, () -> usuarioService.cadastrarValor(usuario));
     }
 
     @Test
     public void naoDeveCadastrarUsuarioComEmailJaCadastrado()  {
-        UsuarioModel usuario = getUsuarioValido(TipoUsuario.FISICA);
+        UsuarioModel usuario = gerarUsuarioValido(TipoUsuario.FISICA);
         usuarioService.cadastrarValor(usuario);
         UsuarioModel novoUsuario = new PessoaFisica(usuario.getNome(), usuario.getEmail(), CPF.gerarCPF());
-        assertThrows(UsuarioDuplicadoException.class,
-                () -> usuarioService.cadastrarValor(novoUsuario));
+
+        assertThrows(UsuarioDuplicadoException.class, () -> usuarioService.cadastrarValor(novoUsuario));
     }
 
     @Test
     public void naoDeveCadastrarUsuarioComCpfJaCadastrado()  {
-        UsuarioModel usuario = getUsuarioValido(TipoUsuario.FISICA);
+        UsuarioModel usuario = gerarUsuarioValido(TipoUsuario.FISICA);
         usuarioService.cadastrarValor(usuario);
-        String email = RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME)+"@"
-                +RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME)+"."
-                +RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME);
+        String email = gerarEmailValido();
         UsuarioModel novoUsuario = new PessoaFisica(usuario.getNome(), email, ((PessoaFisica) usuario).getCpf());
-        assertThrows(UsuarioDuplicadoException.class,
-                () -> usuarioService.cadastrarValor(novoUsuario));
+
+        assertThrows(UsuarioDuplicadoException.class, () -> usuarioService.cadastrarValor(novoUsuario));
+    }
+
+    @Test
+    public void naoDeveCadastrarUsuarioComCnpjJaCadastrado()  {
+        UsuarioModel usuario = gerarUsuarioValido(TipoUsuario.JURIDICA);
+        usuarioService.cadastrarValor(usuario);
+        String email = gerarEmailValido();
+        UsuarioModel novoUsuario = new PessoaJuridica(usuario.getNome(), email, ((PessoaJuridica) usuario).getCnpj());
+
+        assertThrows(UsuarioDuplicadoException.class, () -> usuarioService.cadastrarValor(novoUsuario));
     }
 
     @Test
@@ -82,19 +88,37 @@ public class TesteUsuario
 
     @Test
     public void naoDeveCadastrarUsuarioCampoVazio(){
-        UsuarioModel usuarioModel = new PessoaFisica("","","");
-        assertThrows(IllegalArgumentException.class,()->usuarioService.cadastrarValor(usuarioModel));
+        UsuarioModel usuario = new PessoaFisica("","","");
+
+        assertThrows(CampoVazioException.class,()->usuarioService.cadastrarValor(usuario));
     }
 
-    private UsuarioModel getUsuarioValido(TipoUsuario tipo){
-        String nome = RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME);
-        String email = RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME)+"@"
-                +RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME)+"."
-                +RandomStringUtils.randomAlphanumeric(TEST_CONSTANTS.COMPRIMENTO_NOME);
-        if (tipo==TipoUsuario.FISICA){
-            return new PessoaFisica(nome,email, CPF.gerarCPF());
-        }
-        return new PessoaJuridica(nome,email, CNPJ.gerarCNPJ());
+    @Test
+    public void naoDeveCadastrarUsuarioEmailVazio(){
+        UsuarioModel usuario = new PessoaFisica(gerarNomeValido(),"","");
+
+        assertThrows(CampoVazioException.class,()->usuarioService.cadastrarValor(usuario));
+    }
+
+    @Test
+    public void naoDeveCadastrarUsuarioEmailInvalido(){
+        UsuarioModel usuario = new PessoaFisica(gerarNomeValido(),gerarNomeValido(),CPF.gerarCPF());
+
+        assertThrows(IllegalArgumentException.class,()->usuarioService.cadastrarValor(usuario));
+    }
+
+    @Test
+    public void naoDeveCadastrarUsuarioCpfVazio(){
+        UsuarioModel usuario = new PessoaFisica(gerarNomeValido(),gerarEmailValido(),"");
+
+        assertThrows(CampoVazioException.class,()->usuarioService.cadastrarValor(usuario));
+    }
+
+    @Test
+    public void naoDeveCadastrarUsuarioCpfInvalido(){
+        UsuarioModel usuario = new PessoaFisica(gerarNomeValido(),gerarEmailValido(),gerarNomeValido());
+
+        assertThrows(IllegalArgumentException.class,()->usuarioService.cadastrarValor(usuario));
     }
 
 }

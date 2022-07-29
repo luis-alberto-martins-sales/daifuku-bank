@@ -5,8 +5,11 @@ import com.daifuku.constants.TAXA;
 import com.daifuku.conta.ContaDAO;
 import com.daifuku.enums.TipoConta;
 import com.daifuku.enums.TipoUsuario;
+import com.daifuku.exceptions.CampoVazioException;
 import com.daifuku.exceptions.NegotialException;
+import com.daifuku.exceptions.SaldoInsuficienteException;
 import com.daifuku.usuario.UsuarioDAO;
+import com.daifuku.usuario.UsuarioModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -51,8 +54,8 @@ public class OperacaoFinanceiraService extends Service<OperacaoFinanceiraModel> 
     }
 
     private void verificarSaldoOperacaoTaxada(BigDecimal montante, Integer chaveContaOrigem, BigDecimal taxa) {
-        //FIXME
-        if (usuarioDAO.recuperarValor(contaDAO.recuperarValor(chaveContaOrigem).getChaveUsuario()).getTipoUsuario() != TipoUsuario.JURIDICA){
+        UsuarioModel usuario = contaDAO.recuperarUsuarioDaConta(chaveContaOrigem);
+        if (usuario.getTipoUsuario() != TipoUsuario.JURIDICA){
             verificarSaldo(montante,chaveContaOrigem);
             return;
         }
@@ -77,11 +80,9 @@ public class OperacaoFinanceiraService extends Service<OperacaoFinanceiraModel> 
 
     }
 
-
-
     private void verificarSaldo(BigDecimal montante, Integer chaveConta) {
         if (montante.compareTo(contaDAO.consultarSaldo(chaveConta))==1){
-            throw new NegotialException("Saldo insuficiente.");
+            throw new SaldoInsuficienteException();
         }
     }
 
@@ -89,20 +90,20 @@ public class OperacaoFinanceiraService extends Service<OperacaoFinanceiraModel> 
     @Override
     protected void verificarCampoVazio(@NotNull OperacaoFinanceiraModel valor){
         if (valor.getMontante()==null){
-            throw new IllegalArgumentException("Montante não informado.");
+            throw new CampoVazioException("montante");
         }
         if (valor.getChaveContaOrigem()==null && valor.getChaveContaDestino()==null){
-            throw new IllegalArgumentException("Chaves de contas não informadas.");
+            throw new CampoVazioException("chaves de contas");
         }
 
     }
     @Override
     protected void validarValor(OperacaoFinanceiraModel valor) {
         if (valor.getMontante().signum()!=1) {
-            throw new NegotialException("Montante deve ser número positivo.");
+            throw new IllegalArgumentException("Montante deve ser número positivo.");
         }
         if (valor.getMontante().scale()>2) {
-            throw new NegotialException("Montante deve ser número com no máximo 2 casas decimais.");
+            throw new ArithmeticException("Montante deve ser número com no máximo 2 casas decimais.");
         }
         if (valor.getChaveContaOrigem()!=null) {
             contaDAO.recuperarValor(valor.getChaveContaOrigem());

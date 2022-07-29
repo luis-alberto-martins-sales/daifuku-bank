@@ -21,7 +21,9 @@ C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\databases\DatabaseUsuar
 C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\databases\Database.java
 C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\utils\CPF.java
 C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\conta\ContaModel.java
+C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\exceptions\SaldoInsuficienteException.java
 C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\usuario\UsuarioService.java
+C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\exceptions\CampoVazioException.java
 C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\usuario\UsuarioDAO.java
 C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\usuario\PessoaJuridica.java
 C:\Users\F6360787\daifuku-bank\src\main\java\com\daifuku\conta\ContaService.java

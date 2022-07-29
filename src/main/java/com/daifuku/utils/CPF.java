@@ -4,7 +4,8 @@ import static java.lang.Integer.parseInt;
 
 public class CPF {
 
-    //http://www.receita.fazenda.gov.br/aplicacoes/atcta/cpf/funcoes.js
+    // Fonte:
+    // http://www.receita.fazenda.gov.br/aplicacoes/atcta/cpf/funcoes.js
     public static boolean testarCPF(String strCPF) {
         if (!strCPF.matches("\\d{11}")){
             throw new IllegalArgumentException("Cpf inválido.");
@@ -33,7 +34,8 @@ public class CPF {
         return true;
     }
 
-    //https://receitasdecodigo.com.br/java/classe-java-completa-para-gerar-e-validar-cpf-e-cnpj
+    // Fonte
+    // https://receitasdecodigo.com.br/java/classe-java-completa-para-gerar-e-validar-cpf-e-cnpj
     private static int randomiza(int n) {
         int ranNum = (int) (Math.random() * n);
         return ranNum;

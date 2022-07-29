@@ -5,7 +5,8 @@ import java.util.InputMismatchException;
 
 public class CNPJ {
 
-    //https://www.devmedia.com.br/validando-o-cnpj-em-uma-aplicacao-java/22374
+    // Fonte
+    // https://www.devmedia.com.br/validando-o-cnpj-em-uma-aplicacao-java/22374
 
     public static boolean testarCNPJ(String CNPJ) {
         // considera-se erro CNPJ's formados por uma sequencia de numeros iguais
@@ -68,7 +69,8 @@ public class CNPJ {
 
     }
 
-    //https://receitasdecodigo.com.br/java/classe-java-completa-para-gerar-e-validar-cpf-e-cnpj
+    // Fonte
+    // https://receitasdecodigo.com.br/java/classe-java-completa-para-gerar-e-validar-cpf-e-cnpj
     private static int randomiza(int n) {
         int ranNum = (int) (Math.random() * n);
         return ranNum;

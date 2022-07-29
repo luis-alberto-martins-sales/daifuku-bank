@@ -24,14 +24,6 @@ public abstract class Database<T> {
         return ultimaChave+1;
     }
 
-    public Set<T> recuperarTodosValores() {
-        Set<T> conjuntoValores = new HashSet<>();
-        for (Integer chave:mapa.keySet()) {
-            conjuntoValores.add(mapa.get(chave));
-        }
-        return Collections.unmodifiableSet(conjuntoValores) ;
-    }
-
     public T recuperarValor(Integer chave){
         return clonarValor(mapa.get(chave));
     }
